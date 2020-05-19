@@ -81,6 +81,8 @@ RUN \
 	libxslt \
 	openssl \
 	p7zip \
+	git \
+	ffmpeg \
 	python2 \
 	python3 \
 	unrar \
@@ -89,6 +91,7 @@ RUN \
  pip2 install --no-cache-dir -U \
 	pip && \
  pip2 install --no-cache-dir \
+	wheel \
 	apprise \
 	chardet \
 	pynzbget \
@@ -96,16 +99,40 @@ RUN \
  pip3 install --no-cache-dir -U \
 	pip && \
  pip3 install --no-cache-dir \
+	wheel \
 	apprise \
 	chardet \
 	pynzbget \
-	rarfile && \
+    chardet \
+    pynzb \
+    requests \
+	requests[security] \
+	requests-cache \
+	babelfish \
+	tmdbsimple \
+	idna \
+	mutagen \
+	guessit \
+	subliminal \
+	python-dateutil \
+	stevedore \
+	qtfaststart \
+	rarfile &&\
  echo "**** cleanup ****" && \
  apk del --purge \
 	build-dependencies && \
  rm -rf \
 	/root/.cache \
 	/tmp/*
+
+#mp4automator
+RUN git clone https://github.com/pazport/sickbeard_mp4_automator.git mp4automator
+RUN chmod -R 777 /mp4automator
+RUN chown -R 1000:1000 /mp4automator
+RUN ln -s /config/mp4automator /mp4automator
+
+#update ffmpeg
+RUN apk update && apk upgrade
 
 # add local files and files from buildstage
 COPY --from=buildstage /app/nzbget /app/nzbget
